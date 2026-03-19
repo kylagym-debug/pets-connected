@@ -176,14 +176,14 @@ function matchDogProfiles() {
                 const card = document.createElement("div");
                 card.classList.add("match-card");
 
-                card.innerHTML = `
-                    <img src="${getImageURL(found.image)}">
-                    <div class="match-card-content">
-                        <h3>${missing.name}</h3>
-                        <p>${found.color} • ${found.size}</p>
-                        <p>⭐ ${score} match</p>
-                    </div>
-                `;
+card.innerHTML = `
+    <img src="${getImageURL(found.image)}">
+    <div class="match-card-content">
+        <h3>${missing.name}</h3>
+        <p>${found.color} • ${found.size}</p>
+        <p>${found.breed || "Unknown breed"}</p>
+    </div>
+`;
 
                 results.appendChild(card);
             }
