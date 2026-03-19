@@ -1,108 +1,153 @@
-// HIDE PAGES & FORMS
-function hideAllPages() {
-    document.getElementById("home-page").style.display = "none";
-    document.getElementById("adoption-page").style.display = "none";
-    document.getElementById("lost-page").style.display = "none";
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
 }
 
-function hideAllForms() {
-    document.getElementById("animal-form").style.display = "none";
-    document.getElementById("owner-form").style.display = "none";
-    document.getElementById("missing-form").style.display = "none";
-    document.getElementById("found-form").style.display = "none";
+body {
+    background: linear-gradient(135deg, #ff6a6a, #ffb86c);
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-// NAVIGATION
-function showMain(page) {
-    hideAllPages();
-    if(page === "adoption") document.getElementById("adoption-page").style.display = "flex";
-    else document.getElementById("lost-page").style.display = "flex";
+/* PAGES */
+#home-page,
+#adoption-page,
+#lost-page {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    width: 100%;
+    max-width: 700px;
+
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
 }
 
-function goHome() {
-    hideAllPages();
-    hideAllForms();
-    document.getElementById("home-page").style.display = "flex";
+#home-page {
+    display: flex;
 }
 
-function showAdoption(type) {
-    hideAllForms();
-    document.getElementById(type === "animal" ? "animal-form" : "owner-form").style.display = "block";
+/* TITLES */
+h1 {
+    font-size: 2.8rem;
+    margin-bottom: 10px;
 }
 
-function showLost(type) {
-    hideAllForms();
-    document.getElementById(type === "missing" ? "missing-form" : "found-form").style.display = "block";
+.subtitle {
+    margin-bottom: 40px;
+    color: #666;
 }
 
-// DATA
-let missingDogs = [];
-let foundDogs = [];
-let adoptionAnimals = [];
-let adoptionOwners = [];
-
-// HELPERS
-function readImage(fileInput) {
-    return new Promise((resolve) => {
-        if(fileInput.files && fileInput.files[0]){
-            const reader = new FileReader();
-            reader.onload = e => resolve(e.target.result);
-            reader.readAsDataURL(fileInput.files[0]);
-        } else resolve(""); // no image
-    });
+/* CARDS */
+.home-options {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
-// SUBMIT FORMS
-async function submitMissingDogProfile(e){
-    e.preventDefault();
-    const dog = {
-        name: document.getElementById("missing-dog-name").value,
-        color: document.getElementById("missing-dog-color").value,
-        size: document.getElementById("missing-dog-size").value,
-        breed: document.getElementById("missing-dog-breed").value,
-        standout: document.getElementById("missing-dog-standout").value,
-        picture: await readImage(document.getElementById("missing-dog-picture"))
-    };
-    missingDogs.push(dog);
-    e.target.reset();
-    alert("Missing dog added!");
+.card-option {
+    background: linear-gradient(135deg, #ff758c, #ff7eb3);
+    color: white;
+    padding: 40px;
+    border-radius: 25px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    width: 220px;
+    transition: 0.3s;
 }
 
-async function submitFoundDogProfile(e){
-    e.preventDefault();
-    const dog = {
-        name: document.getElementById("found-dog-name").value,
-        color: document.getElementById("found-dog-color").value,
-        size: document.getElementById("found-dog-size").value,
-        breed: document.getElementById("found-dog-breed").value,
-        standout: document.getElementById("found-dog-standout").value,
-        picture: await readImage(document.getElementById("found-dog-picture"))
-    };
-    foundDogs.push(dog);
-    e.target.reset();
-    alert("Found dog added!");
+.card-option:hover {
+    transform: scale(1.05);
 }
 
-// MATCHING
-function matchDogProfiles(){
-    const container = document.getElementById("lost-results");
-    container.innerHTML = "";
-    foundDogs.forEach(found => {
-        missingDogs.forEach(missing => {
-            // simple match: same color
-            if(found.color === missing.color){
-                const card = document.createElement("div");
-                card.classList.add("match-card");
-                card.innerHTML = `
-                    <img src="${found.picture || missing.picture || ''}" alt="${found.name || missing.name}">
-                    <h3>${missing.name} 🐾 ${found.name}</h3>
-                    <p>Breed: ${missing.breed || found.breed || 'N/A'}</p>
-                    <p>Size: ${missing.size || found.size || 'N/A'}</p>
-                    <p>Color: ${missing.color}</p>
-                    <p>Features: ${missing.standout || found.standout || 'N/A'}</p>
-                `;
-                container.appendChild(card);
-            }
-        });
-    });
+/* FORMS */
+section {
+    width: 100%;
+    margin-top: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+}
+
+/* CHECKBOX GRID */
+#animal-characteristics,
+#dream-characteristics {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+/* BUTTONS */
+button {
+    margin-top: 15px;
+    padding: 12px;
+    width: 100%;
+    border-radius: 12px;
+    border: none;
+    background: #ff758c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* RESULTS GRID */
+#adoption-results,
+#lost-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* MATCH CARD */
+.match-card {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    transition: 0.3s;
+}
+
+.match-card:hover {
+    transform: scale(1.05);
+}
+
+.match-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.match-card-content {
+    padding: 10px;
+    text-align: left;
+}
+
+/* HIDE FORMS */
+#animal-form,
+#owner-form,
+#missing-form,
+#found-form {
+    display: none;
 }
